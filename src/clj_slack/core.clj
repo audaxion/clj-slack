@@ -59,8 +59,8 @@
 
 (defn- build-params
   "Builds the full URL (endpoint + params)"
-  ([connection endpoint query-map]
-   (str "/" endpoint "?token=" (:token (verify connection)) "&" (make-query-string query-map))))
+  ([_connection endpoint query-map]
+   (str "/" endpoint "?" (make-query-string query-map))))
 
 (defn- build-multiparts
   "Builds an http-kit multiparts sequence"
@@ -83,7 +83,8 @@
   Provides sensible defaults for timeouts."
   [connection]
   (let [default-options {:conn-timeout 60000
-                         :socket-timeout 60000}]
+                         :socket-timeout 60000
+                         :headers {:authorization (str "Bearer " (:token connection))}}]
     (merge default-options
            (dissoc connection :api-url :token))))
 
